@@ -1,3 +1,6 @@
 [submodule "week1"]
 	path = week1
 	url = https://github.com/benfleuty/cmp309week1
+[submodule "week2"]
+	path = week2
+	url = https://github.com/benfleuty/cmp309week2
