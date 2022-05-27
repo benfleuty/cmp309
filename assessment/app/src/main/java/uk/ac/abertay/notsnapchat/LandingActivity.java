@@ -1,5 +1,6 @@
 package uk.ac.abertay.notsnapchat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -20,13 +21,16 @@ public class LandingActivity extends AppCompatActivity {
                 // todo start main app activity
                 break;
             case NotLoggedIn:
+                Intent i = new Intent(this, MainActivity.class);
+                startActivity(i);
                 // todo start login activity
                 break;
             case SessionExpired:
-                // todo start login activity with session expired message 
+                // todo start login activity with session expired message
                 break;
             default:
                 // todo error message
+                break;
         }
 
     }
