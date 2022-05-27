@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">notsnapchat</string>
+    <string name="app_name">NotSnapChat</string>
+    <string name="landing_welcome">Welcome to</string>
 </resources>
