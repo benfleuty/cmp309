@@ -52,4 +52,6 @@ public class LandingActivity extends AppCompatActivity {
         NotLoggedIn,
         SessionExpired
     }
+
+
 }
