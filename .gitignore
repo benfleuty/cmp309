@@ -41,3 +41,6 @@
 **/**/obj/
 **/**/obj/*
 **/**/.externalNativeBuild
+
+#ignore db file for password protection
+**/**/db.php 
