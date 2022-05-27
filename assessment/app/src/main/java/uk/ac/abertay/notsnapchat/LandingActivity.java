@@ -21,7 +21,7 @@ public class LandingActivity extends AppCompatActivity {
                 // todo start main app activity
                 break;
             case NotLoggedIn:
-                Intent i = new Intent(this, MainActivity.class);
+                Intent i = new Intent(this, LoginActivity.class);
                 startActivity(i);
                 // todo start login activity
                 break;
