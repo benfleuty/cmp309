@@ -10,7 +10,21 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 public class LoginActivity extends AppCompatActivity {
+
+    final String POST_EMAIL = "email";
+    final String POST_PASSWORD = "password";
+    final String POST_USERNAME = "username";
 
     Toast currentToast;
 
@@ -110,11 +124,40 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        showToast("Logging in with " + getEmail() + "/" + getPassword());
+        //showToast("Logging in with " + getEmail() + "/" + getPassword());
 
         // todo try log in
 
+        RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
 
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ExternalResources.loginUser,
+                response -> Toast.makeText(LoginActivity.this, response.trim(), Toast.LENGTH_LONG).show(),
+                error -> Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_LONG).show()
+        ) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put(POST_EMAIL, getEmail());
+                params.put(POST_PASSWORD, getPassword());
+                return params;
+            }
+        };
+
+        requestQueue.add(stringRequest);
+
+        return;
+//
+//        RestfulDataObject email = new RestfulDataObject("email", getEmail());
+//        RestfulDataObject password = new RestfulDataObject("password", getPassword());
+//
+//        ArrayList<RestfulDataObject> data = new ArrayList<>(email, password);
+//
+//        Uri.Builder builder = new Uri.Builder();
+//        builder.scheme("https")
+//                .authority(ExternalResources.loginUser);
+//
+//        PostRequest postRequest = new PostRequest(ExternalResources.loginUser, data);
+//        postRequest.Send();
     }
 
 }
