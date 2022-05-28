@@ -1,5 +1,6 @@
 package uk.ac.abertay.notsnapchat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -13,8 +14,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -75,6 +80,14 @@ public class LoginActivity extends AppCompatActivity {
         return !TextUtils.isEmpty(strPassword);
     }
 
+    private String getEmailDebug() {
+        return "test@test.com";
+    }
+
+    private String getPasswordDebug() {
+        return "test";
+    }
+
     private String getEmail() {
         return ((EditText) findViewById(R.id.txtEmail)).getText().toString();
     }
@@ -117,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
             errors += " Invalid password!";
 
         }
-
+        success = true;
         if (!success) {
             showToast(errors);
             return;
@@ -125,15 +138,73 @@ public class LoginActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, ExternalResources.loginUser,
-                response -> Toast.makeText(LoginActivity.this, response.trim(), Toast.LENGTH_LONG).show(),
-                error -> Toast.makeText(LoginActivity.this, error.toString(), Toast.LENGTH_LONG).show()
-        ) {
+        Response.Listener<String> postSuccess = response -> {
+            JSONObject jResponse;
+            try {
+                jResponse = new JSONObject(response);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            try {
+                int status = jResponse.getInt("status");
+                switch (status) {
+                    case 200:
+                        // success
+                        showToast("success");
+                        break;
+                    case 400:
+                        // error with the inputs
+                        showToast("There is an issue with your email/password!");
+                        return;
+                    case 500:
+                        showToast("There is an issue with our server!");
+                        return;
+                    default:
+                        // todo error handling
+                        showToast("Something unexpected happened!");
+                        return;
+                }
+
+                JSONObject responseData = jResponse.getJSONObject("response");
+                status = responseData.getInt("status");
+
+                switch (status) {
+                    case 200:
+                        // success
+                        break;
+                    case 404:
+                        // invalid u/p combo
+                        showToast("We do not recognise that username/password combination!");
+                        return;
+                    default:
+                        showToast("Something unexpected happened!");
+                        return;
+                }
+
+                // get user id
+                responseData = responseData.getJSONObject("data");
+
+                // todo save user locally
+
+                startActivity(new Intent(this, MainActivity.class));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        };
+
+        Response.ErrorListener postError = error -> {
+            showToast(error.toString());
+        };
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ExternalResources.loginUser, postSuccess, postError) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put(POST_EMAIL, getEmail());
-                params.put(POST_PASSWORD, getPassword());
+                params.put(POST_EMAIL, getEmailDebug());
+                params.put(POST_PASSWORD, getPasswordDebug());
                 return params;
             }
         };

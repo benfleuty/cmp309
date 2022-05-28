@@ -80,7 +80,7 @@ switch ($result->num_rows){
     $output = json_encode($output);
     exit($output);
   case 1:
-    // todo user found
+    // a user has been found
     $row = $result->fetch_assoc();
     break;
   default:
@@ -100,7 +100,10 @@ $passwordsMatch = password_verify($unsafe_password,$row['password']);
 // if passwords do not match
 if(!$passwordsMatch){
   // email/password combo not found
-  exit;
+  $output['status'] = 200;
+  $output['response']['status'] = 400;
+  $output = json_encode($output);
+  exit($output);
 }
 
 // verified login details
