@@ -36,9 +36,6 @@ if (empty($_POST['password'])) {
 else {
   $unsafe_password = $_POST["password"];
   // password validation can be done here
-
-  $safe_password = password_hash($unsafe_password, PASSWORD_DEFAULT);
-  $unsafe_password = NULL;
 }
 
 // if output['status'] is 0 then no errors were detected
@@ -54,7 +51,7 @@ if ($output['status'] !== 0) {
 /// and verify user
 /////////////////////////////////
 
-$sql = "SELECT id FROM notsnapchat_users WHERE email = ? AND password = ?";
+$sql = "SELECT id,password FROM notsnapchat_users WHERE email = ?";
 $query = new Query($sql);
 
 if (!$query->isPrepared()) {
@@ -62,9 +59,9 @@ if (!$query->isPrepared()) {
   die(strval(__LINE__));
 }
 
-$paramsTypes = "ss";
+$paramsTypes = "s";
 
-$query->bindParameters($paramsTypes, $email, $safe_password);
+$query->bindParameters($paramsTypes, $email);
 
 $query->execute();
 
@@ -77,7 +74,7 @@ $result = $query->getResult();
 
 switch ($result->num_rows){
   case 0:
-    // todo no user found
+    // email/password combo not found
     $output['status'] = 200;
     $output['response']['status'] = 404;
     $output = json_encode($output);
@@ -96,6 +93,17 @@ if(gettype($row) != "array"){
   // todo handle error
   die(strval(__LINE__));
 }
+
+
+$passwordsMatch = password_verify($unsafe_password,$row['password']);
+
+// if passwords do not match
+if(!$passwordsMatch){
+  // email/password combo not found
+  exit;
+}
+
+// verified login details
 
 $output['status'] = 200;
 $output['response']['status'] = 200;
