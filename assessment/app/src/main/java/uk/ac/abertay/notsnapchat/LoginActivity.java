@@ -11,11 +11,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
+
+    Toast currentToast;
+
+    private void showToast(String text){
+        currentToast.cancel();
+        currentToast = Toast.makeText(this,text,Toast.LENGTH_LONG);
+        currentToast.show();
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         createButtonListeners();
+        currentToast = new Toast(this);
     }
 
     private void createButtonListeners() {
@@ -61,7 +71,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signIn() {
-        // todo input validation
         boolean success = true;
         String errors = "";
         if (!isEmailValid()) {
@@ -75,18 +84,37 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (!success) {
-            Toast.makeText(this, errors, Toast.LENGTH_LONG).show();
+            showToast(errors);
             return;
         }
 
-        Toast.makeText(this, ("Logging in with " + getEmail() + "/" + getPassword()), Toast.LENGTH_LONG).show();
+        showToast("Registering in with " + getEmail() + "/" + getPassword());
         // todo try sign in
     }
 
     private void login() {
-        // todo input validation
-        
+        boolean success = true;
+        String errors = "";
+        if (!isEmailValid()) {
+            success = false;
+            errors += " Invalid email!";
+        }
+        if (!isPasswordValid()) {
+            success = false;
+            errors += " Invalid password!";
+
+        }
+
+        if (!success) {
+            showToast(errors);
+            return;
+        }
+
+        showToast("Logging in with " + getEmail() + "/" + getPassword());
+
         // todo try log in
+
+
     }
 
 }
