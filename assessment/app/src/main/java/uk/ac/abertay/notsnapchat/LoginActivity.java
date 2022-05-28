@@ -16,7 +16,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
 
         btnSignIn.setOnClickListener(view -> {
-            signIn();
+            signUp();
         });
         btnLogin.setOnClickListener(view -> {
             login();
@@ -84,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         return ((EditText) findViewById(R.id.txtPassword)).getText().toString();
     }
 
-    private void signIn() {
+    private void signUp() {
         boolean success = true;
         String errors = "";
         if (!isEmailValid()) {
@@ -102,8 +101,8 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        showToast("Registering in with " + getEmail() + "/" + getPassword());
-        // todo try sign in
+        showToast("Registering with " + getEmail() + "/" + getPassword());
+        // todo try sign up
     }
 
     private void login() {
@@ -123,10 +122,6 @@ public class LoginActivity extends AppCompatActivity {
             showToast(errors);
             return;
         }
-
-        //showToast("Logging in with " + getEmail() + "/" + getPassword());
-
-        // todo try log in
 
         RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
 
