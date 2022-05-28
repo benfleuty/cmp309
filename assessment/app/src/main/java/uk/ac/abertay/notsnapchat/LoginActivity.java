@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login() {
         // todo input validation
-
+        
         // todo try log in
     }
 
