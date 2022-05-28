@@ -139,20 +139,6 @@ public class LoginActivity extends AppCompatActivity {
         };
 
         requestQueue.add(stringRequest);
-
-        return;
-//
-//        RestfulDataObject email = new RestfulDataObject("email", getEmail());
-//        RestfulDataObject password = new RestfulDataObject("password", getPassword());
-//
-//        ArrayList<RestfulDataObject> data = new ArrayList<>(email, password);
-//
-//        Uri.Builder builder = new Uri.Builder();
-//        builder.scheme("https")
-//                .authority(ExternalResources.loginUser);
-//
-//        PostRequest postRequest = new PostRequest(ExternalResources.loginUser, data);
-//        postRequest.Send();
     }
 
 }
