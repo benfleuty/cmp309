@@ -22,6 +22,7 @@ public class LandingActivity extends AppCompatActivity {
                 break;
             case NotLoggedIn:
                 startActivity(new Intent(this, LoginActivity.class));
+                finish();
                 break;
             case SessionExpired:
                 // todo start login activity with session expired message

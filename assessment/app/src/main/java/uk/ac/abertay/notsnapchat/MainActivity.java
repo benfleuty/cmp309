@@ -1,6 +1,7 @@
 package uk.ac.abertay.notsnapchat;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -8,7 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +24,6 @@ import androidx.core.content.ContextCompat;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
-import java.util.Date;
-import java.util.Objects;
 import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity {
@@ -61,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
 
-        Objects.requireNonNull(getSupportActionBar()).hide();
+        if(getSupportActionBar()!=null)
+            getSupportActionBar().hide();
 
         previewView = findViewById(R.id.cameraPreview);
         btnOpenChat = findViewById(R.id.btnOpenChat);
@@ -126,10 +125,7 @@ public class MainActivity extends AppCompatActivity {
     private void captureImage() {
         // app storage path
         File storageDir = this.getFilesDir();
-        Date now = new Date();
-        String timestamp = String.valueOf(now);
-        String photoFilePath = storageDir.getAbsolutePath() + "/" + timestamp + ".jpg";
-
+        String photoFilePath = storageDir.getAbsolutePath() + "/image.jpg";
         File photo = new File(photoFilePath);
 
         imageCapture.takePicture(
@@ -139,12 +135,12 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        Toast.makeText(MainActivity.this, "image saved successfully", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(MainActivity.this, ImageViewerActivity.class));
+                        finish();
                     }
 
                     @Override
                     public void onError(@NonNull ImageCaptureException exception) {
-                        Toast.makeText(MainActivity.this, "image not saved successfully", Toast.LENGTH_LONG).show();
                     }
                 }
         );

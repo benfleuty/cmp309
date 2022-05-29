@@ -189,6 +189,7 @@ public class LoginActivity extends AppCompatActivity {
                 // todo save user locally
 
                 startActivity(new Intent(this, MainActivity.class));
+                finish();
 
             } catch (JSONException e) {
                 e.printStackTrace();
