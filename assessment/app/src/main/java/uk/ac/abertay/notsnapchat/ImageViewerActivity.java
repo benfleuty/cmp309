@@ -58,6 +58,7 @@ public class ImageViewerActivity extends AppCompatActivity {
                 return false;
 
             startActivity(new Intent(this, MainActivity.class));
+            overridePendingTransition(R.anim.slide_in_from_left,R.anim.none);
             finish();
             return false;
         });

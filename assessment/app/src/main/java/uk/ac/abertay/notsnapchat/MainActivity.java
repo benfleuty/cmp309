@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                         startActivity(new Intent(MainActivity.this, ImageViewerActivity.class));
+                        overridePendingTransition(R.anim.none,R.anim.none);
                         finish();
                     }
 
