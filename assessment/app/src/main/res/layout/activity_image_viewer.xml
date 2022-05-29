@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent">
 
     <ImageView
@@ -13,8 +14,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="X"
+        android:layout_marginStart="10dp"
+        app:layout_constraintLeft_toLeftOf="@id/imgTaken"
         android:padding="0dp"
         android:alpha="0.8"
-        android:id="@+id/btnCancel"
-        />
+        android:id="@+id/btnCancel" />
+
+    <Button
+        android:id="@+id/btnSavePhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="Save"
+        app:layout_constraintLeft_toLeftOf="@id/imgTaken"
+        app:layout_constraintBottom_toBottomOf="@id/imgTaken" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -74,7 +74,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnCapture.setOnTouchListener((view, motionEvent) -> {
-            captureImage();
+            if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
+                return false;
+
+            capturePhoto();
             return false;
         });
 
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         }, getExecutor());
     }
 
-    private void captureImage() {
+    private void capturePhoto() {
         // app storage path
         File storageDir = this.getFilesDir();
         String photoFilePath = storageDir.getAbsolutePath() + "/image.jpg";
