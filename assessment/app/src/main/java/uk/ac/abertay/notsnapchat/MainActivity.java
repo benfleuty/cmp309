@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
@@ -24,14 +23,11 @@ import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final int REQUEST_CODE_PERMISSIONS = 111;
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA"};
 
     private PreviewView previewView;
-    private Button overlayButton;
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderListenableFuture;
-    private CameraSelector cameraSelector;
     private int cameraFacing;
     private ProcessCameraProvider cameraProvider;
 
@@ -44,11 +40,10 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).hide();
 
         previewView = findViewById(R.id.cameraPreview);
-        overlayButton = findViewById(R.id.overlayButton);
 
         previewView.setOnTouchListener(
                 new View.OnTouchListener() {
-                    private GestureDetector gestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
+                    private final GestureDetector gestureDetector = new GestureDetector(MainActivity.this, new GestureDetector.SimpleOnGestureListener() {
                         @Override
                         public boolean onDoubleTap(MotionEvent e) {
                             MainActivity.this.swapCameras();
@@ -94,10 +89,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setCameraFacing(int direction) {
-        Log.i("direction","direction is " + String.valueOf(direction));
         cameraProvider.unbindAll();
         // camera selection use case
-        cameraSelector = new CameraSelector.Builder()
+        CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(direction)
                 .build();
 
@@ -120,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestAllPermissions() {
+        int REQUEST_CODE_PERMISSIONS = 111;
         ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
     }
 
