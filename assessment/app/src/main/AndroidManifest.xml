@@ -35,5 +35,6 @@
         <activity
             android:name=".ImageViewerActivity"
             android:exported="false" />
+        <activity android:name=".ChatListActivity" />
     </application>
 </manifest>

@@ -69,7 +69,11 @@ public class MainActivity extends AppCompatActivity {
         btnFlipCamera = findViewById(R.id.btnFlipCam);
 
         btnOpenChat.setOnTouchListener((view, motionEvent) -> {
-            // todo start chat activity
+            if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
+                return false;
+
+            startActivity(new Intent(this,ChatListActivity.class));
+            overridePendingTransition(R.anim.slide_in_from_left,R.anim.slide_out_to_right);
             return false;
         });
 
@@ -139,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                         startActivity(new Intent(MainActivity.this, ImageViewerActivity.class));
-                        overridePendingTransition(R.anim.none,R.anim.none);
+                        overridePendingTransition(R.anim.slide_in_from_bottom,R.anim.none);
                         finish();
                     }
 
