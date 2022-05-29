@@ -3,10 +3,10 @@ package uk.ac.abertay.notsnapchat;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
@@ -31,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
     private int cameraFacing;
     private ProcessCameraProvider cameraProvider;
 
+    private Button btnOpenChat;
+    private Button btnCapture;
+    private Button btnOpenSettings;
+    private Button btnFlipCamera;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,30 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).hide();
 
         previewView = findViewById(R.id.cameraPreview);
+        btnOpenChat = findViewById(R.id.btnOpenChat);
+        btnCapture = findViewById(R.id.btnCapture);
+        btnOpenSettings = findViewById(R.id.btnOpenSettings);
+        btnFlipCamera = findViewById(R.id.btnFlipCam);
+
+        btnOpenChat.setOnTouchListener((view, motionEvent) -> {
+            // todo start chat activity
+            return false;
+        });
+
+        btnCapture.setOnTouchListener((view, motionEvent) -> {
+            // todo capture image
+            return false;
+        });
+
+        btnOpenSettings.setOnTouchListener((view, motionEvent) -> {
+            // todo open settings activity
+            return false;
+        });
+
+        btnFlipCamera.setOnTouchListener((view, motionEvent) -> {
+            swapCameras();
+            return false;
+        });
 
         previewView.setOnTouchListener(
                 new View.OnTouchListener() {

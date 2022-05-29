@@ -17,5 +17,58 @@
 
     </androidx.camera.view.PreviewView>
 
+    <Button
+        android:id="@+id/btnFlipCam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:text="Flip cam"
+        app:layout_constraintRight_toRightOf="@id/cameraPreview"
+        app:layout_constraintTop_toTopOf="@id/cameraPreview" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/cameraPreview"
+        app:layout_constraintLeft_toLeftOf="@id/cameraPreview">
+
+        <Button
+            android:id="@+id/btnOpenChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:alpha="0.65"
+            android:gravity="center_vertical"
+            android:text="chat"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnCapture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:alpha="0.65"
+            android:gravity="center_vertical"
+            android:text="Capture"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnOpenSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="20dp"
+            android:alpha="0.65"
+            android:gravity="center_vertical"
+            android:text="SETTINGS"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
