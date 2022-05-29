@@ -6,10 +6,15 @@ import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
@@ -18,6 +23,8 @@ import androidx.core.content.ContextCompat;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.File;
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 
@@ -36,10 +43,22 @@ public class MainActivity extends AppCompatActivity {
     private Button btnOpenSettings;
     private Button btnFlipCamera;
 
+    private CameraSelector cameraSelector;
+    private Preview preview;
+    private ImageCapture imageCapture;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (BuildConfig.DEBUG) {
+            // These flags cause the device screen to turn on (and bypass screen guard if possible) when launching.
+            // This makes it easy for developers to test the app launch without needing to turn on the device
+            // each time and without needing to enable the "Stay awake" option.
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                    | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                    | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        }
         setContentView(R.layout.activity_main);
 
         Objects.requireNonNull(getSupportActionBar()).hide();
@@ -56,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnCapture.setOnTouchListener((view, motionEvent) -> {
-            // todo capture image
+            captureImage();
             return false;
         });
 
@@ -104,6 +123,33 @@ public class MainActivity extends AppCompatActivity {
         }, getExecutor());
     }
 
+    private void captureImage() {
+        // app storage path
+        File storageDir = this.getFilesDir();
+        Date now = new Date();
+        String timestamp = String.valueOf(now);
+        String photoFilePath = storageDir.getAbsolutePath() + "/" + timestamp + ".jpg";
+
+        File photo = new File(photoFilePath);
+
+        imageCapture.takePicture(
+                new ImageCapture.OutputFileOptions.Builder(photo).build(),
+                getExecutor(),
+                new ImageCapture.OnImageSavedCallback() {
+
+                    @Override
+                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                        Toast.makeText(MainActivity.this, "image saved successfully", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onError(@NonNull ImageCaptureException exception) {
+                        Toast.makeText(MainActivity.this, "image not saved successfully", Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+    }
+
     private void swapCameras() {
         switch (cameraFacing) {
             case 0:
@@ -120,18 +166,22 @@ public class MainActivity extends AppCompatActivity {
     private void setCameraFacing(int direction) {
         cameraProvider.unbindAll();
         // camera selection use case
-        CameraSelector cameraSelector = new CameraSelector.Builder()
+        cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(direction)
                 .build();
 
         cameraFacing = direction;
 
         // preview use case
-        Preview preview = new Preview.Builder().build();
+        preview = new Preview.Builder().build();
 
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-        cameraProvider.bindToLifecycle(this, cameraSelector, preview);
+        imageCapture = new ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                .build();
+
+        cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
     }
 
     private Executor getExecutor() {
