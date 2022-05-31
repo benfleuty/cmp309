@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         String strEmail = getEmail();
         boolean result = !TextUtils.isEmpty(strEmail) && Patterns.EMAIL_ADDRESS.matcher(strEmail).matches();
         if (result) return true;
-        errors.add("Invalid email!");
+        errors.add(getResources().getString(R.string.invalid_email));
         return false;
     }
 
@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         String strPassword = getPassword();
         boolean result = TextUtils.isEmpty(strPassword);
         if (result) return true;
-        errors.add("Invalid password!");
+        errors.add(getResources().getString(R.string.invalid_password));
         return false;
     }
 

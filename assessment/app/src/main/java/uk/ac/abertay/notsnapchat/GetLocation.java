@@ -79,8 +79,6 @@ public class GetLocation implements Runnable {
                     }
                     city = address;
                     ImageViewerActivity x = (ImageViewerActivity) context;
-                    x.SetCityName(city);
-//                    Toast.makeText(context, city, Toast.LENGTH_LONG).show();
                 }
 
             } catch (Exception e) {

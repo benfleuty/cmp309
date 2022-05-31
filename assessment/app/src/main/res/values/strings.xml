@@ -1,19 +1,17 @@
 <resources>
     <string name="app_name">NotSnapChat</string>
     <string name="landing_welcome">Welcome to</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="chat">Chat</string>
     <string name="close">Close</string>
     <string name="image_taken_by_user">Image taken by user</string>
-    <string name="close">Close</string>
     <string name="save">Save</string>
     <string name="email_label">Email</string>
     <string name="email_address">Email address</string>
-    <string name="password">Password</string>
     <string name="password">Password</string>
     <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
     <string name="capture">Capture</string>
     <string name="flip_cam">Flip cam</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="invalid_password">Invalid password!</string>
 </resources>

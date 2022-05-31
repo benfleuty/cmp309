@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">NotSnapChat</string>
+    <string name="landing_welcome">Wilkommen bei</string>
+    <string name="chat">Chat</string>
+    <string name="close">Schließen</string>
+    <string name="image_taken_by_user">Das Foto vom Benutzer / vor Benutzerin gemacht</string>
+    <string name="save">Speichern</string>
+    <string name="email_label">E-Mail</string>
+    <string name="email_address">E-Mail-Adresse</string>
+    <string name="password">Passwort</string>
+    <string name="sign_up">Sich registieren</string>
+    <string name="login">Sich anmelden</string>
+    <string name="capture">Schiessen</string>
+    <string name="flip_cam">Kamera wenden</string>
+    <string name="invalid_email">Ungueltige E-Mail-Adresse</string>
+    <string name="invalid_password">Ungueltige Passwort</string>
+</resources>
