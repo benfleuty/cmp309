@@ -17,15 +17,6 @@
 
     </androidx.camera.view.PreviewView>
 
-    <Button
-        android:id="@+id/btnFlipCam"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
-        android:text="Flip cam"
-        app:layout_constraintRight_toRightOf="@id/cameraPreview"
-        app:layout_constraintTop_toTopOf="@id/cameraPreview" />
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,14 +49,14 @@
             android:textColor="@color/white" />
 
         <Button
-            android:id="@+id/btnOpenSettings"
+            android:id="@+id/btnFlipCam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginBottom="20dp"
             android:alpha="0.65"
             android:gravity="center_vertical"
-            android:text="SETTINGS"
+            android:text="Flip cam"
             android:textAlignment="center"
             android:textColor="@color/white" />
 

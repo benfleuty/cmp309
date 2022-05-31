@@ -67,7 +67,6 @@ public class ImageViewerActivity extends Activity {
         imgTaken = findViewById(R.id.imgTaken);
         btnCancel = findViewById(R.id.btnCancel);
         btnSavePhoto = findViewById(R.id.btnSavePhoto);
-        btnLocation = findViewById(R.id.btnLocation);
 
         btnCancel.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)

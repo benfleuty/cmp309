@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         previewView = findViewById(R.id.cameraPreview);
         btnOpenChat = findViewById(R.id.btnOpenChat);
         btnCapture = findViewById(R.id.btnCapture);
-        btnOpenSettings = findViewById(R.id.btnOpenSettings);
         btnFlipCamera = findViewById(R.id.btnFlipCam);
 
         btnOpenChat.setOnTouchListener((view, motionEvent) -> {
@@ -82,11 +81,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
 
             capturePhoto();
-            return false;
-        });
-
-        btnOpenSettings.setOnTouchListener((view, motionEvent) -> {
-            // todo open settings activity
             return false;
         });
 
