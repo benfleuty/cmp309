@@ -180,7 +180,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 // get user from data in from API
-                responseData = responseData.getJSONObject("data");
                 JSONObject user = responseData.getJSONObject("user");
 
                 // send user data to next activity

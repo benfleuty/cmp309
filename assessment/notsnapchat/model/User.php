@@ -151,7 +151,7 @@ class User
     $user['email'] = $row['email'];
     $user['username'] = $row['username'];
 
-    $output['user'] = $user;
+    $output['response']['user'] = $user;
 
     return $output;
   }
