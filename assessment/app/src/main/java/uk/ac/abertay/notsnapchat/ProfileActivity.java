@@ -68,6 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
                 return false;
 
             Intent intentMain = new Intent(this, MainActivity.class);
+            intentMain.putExtra("user",User.to_bundle(user));
             startActivity(intentMain);
             finish();
             return false;
