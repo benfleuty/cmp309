@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageCapture imageCapture;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,10 +51,31 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
 
+        setOnClickListeners();
+
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
 
         previewView = findViewById(R.id.cameraPreview);
+
+        if (!allPermissionsGranted()) {
+            requestAllPermissions();
+        }
+
+
+        cameraProviderListenableFuture = ProcessCameraProvider.getInstance(this);
+        cameraProviderListenableFuture.addListener(() -> {
+            try {
+                cameraProvider = cameraProviderListenableFuture.get();
+                startCameraX();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, getExecutor());
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setOnClickListeners() {
         Button btnOpenChat = findViewById(R.id.btnOpenChat);
         Button btnCapture = findViewById(R.id.btnCapture);
         Button btnFlipCamera = findViewById(R.id.btnFlipCam);
@@ -65,14 +85,14 @@ public class MainActivity extends AppCompatActivity {
             if (event.getAction() != MotionEvent.ACTION_DOWN)
                 return false;
 
-            Intent intentProfile = new Intent(this,ProfileActivity.class);
+            Intent intentProfile = new Intent(this, ProfileActivity.class);
             startActivity(intentProfile);
             finish();
             return false;
         });
 
-        btnOpenChat.setOnTouchListener((view, motionEvent) -> {
-            if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
+        btnOpenChat.setOnTouchListener((view, event) -> {
+            if (event.getAction() != MotionEvent.ACTION_DOWN)
                 return false;
 
             startActivity(new Intent(this, ChatListActivity.class));
@@ -80,16 +100,16 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        btnCapture.setOnTouchListener((view, motionEvent) -> {
-            if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
+        btnCapture.setOnTouchListener((view, event) -> {
+            if (event.getAction() != MotionEvent.ACTION_DOWN)
                 return false;
 
             capturePhoto();
             return false;
         });
 
-        btnFlipCamera.setOnTouchListener((view, motionEvent) -> {
-            if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
+        btnFlipCamera.setOnTouchListener((view, event) -> {
+            if (event.getAction() != MotionEvent.ACTION_DOWN)
                 return false;
 
             swapCameras();
@@ -107,27 +127,12 @@ public class MainActivity extends AppCompatActivity {
                     });
 
                     @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        gestureDetector.onTouchEvent(motionEvent);
+                    public boolean onTouch(View view, MotionEvent event) {
+                        gestureDetector.onTouchEvent(event);
                         return true;
                     }
                 }
         );
-
-        if (!allPermissionsGranted()) {
-            requestAllPermissions();
-        }
-
-
-        cameraProviderListenableFuture = ProcessCameraProvider.getInstance(this);
-        cameraProviderListenableFuture.addListener(() -> {
-            try {
-                cameraProvider = cameraProviderListenableFuture.get();
-                startCameraX();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }, getExecutor());
     }
 
     private void capturePhoto() {
