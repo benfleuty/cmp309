@@ -2,6 +2,7 @@ package uk.ac.abertay.notsnapchat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.Button;
@@ -14,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
@@ -26,8 +26,6 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
-    final String POST_EMAIL = "email";
-    final String POST_PASSWORD = "password";
     private final ArrayList<String> errors = new ArrayList<>();
     Toast currentToast;
     Toast errorToast;
@@ -128,12 +126,16 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login() {
         boolean success = isLoginInformationValid();
-        success = true;
+
+        if (Debug.isDebuggerConnected())
+            success = true;
+
         if (checkLoginFailure(success)) return;
+
 
         RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
 
-        Response.Listener<String> postSuccess = response -> {
+        Response.Listener<String> onLoginPOSTSuccess = response -> {
             JSONObject jResponse;
             try {
                 jResponse = new JSONObject(response);
@@ -170,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
                         break;
                     case 404:
                         // invalid u/p combo
-                        showToast("We do not recognise that username/password combination!");
+                        showToast("We do not recognise that username/password combo!");
                         return;
                     default:
                         showToast("Something unexpected happened!");
@@ -199,19 +201,28 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
-        Response.ErrorListener postError = error -> showToast(error.toString());
+        Response.ErrorListener onLoginPOSTError = error -> showToast(error.toString());
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, ExternalResources.loginUser, postSuccess, postError) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put(POST_EMAIL, getEmailDebug());
-                params.put(POST_PASSWORD, getPasswordDebug());
-                return params;
-            }
-        };
+        Map<String, String> data = new HashMap<>();
 
-        requestQueue.add(stringRequest);
+        if (Debug.isDebuggerConnected()) {
+            data.put(ApiHelper.DATA_KEY_EMAIL, getEmailDebug());
+            data.put(ApiHelper.DATA_KEY_PASSWORD, getPasswordDebug());
+        } else {
+            data.put(ApiHelper.DATA_KEY_EMAIL, getEmail());
+            data.put(ApiHelper.DATA_KEY_PASSWORD, getPassword());
+        }
+
+        ApiHelper postTryLogin = new ApiHelper(
+                this,
+                Request.Method.POST,
+                ExternalResources.loginUserURL,
+                data,
+                onLoginPOSTSuccess,
+                onLoginPOSTError
+        );
+
+        postTryLogin.execute();
     }
 
 }

@@ -4,5 +4,5 @@ import java.net.URL;
 
 public class ExternalResources {
     protected static String baseUrl = "https://mayar.abertay.ac.uk/~1900040/notsnapchat/";
-    public static String loginUser = baseUrl + "user/login";
+    public static String loginUserURL = baseUrl + "user/login";
 }
