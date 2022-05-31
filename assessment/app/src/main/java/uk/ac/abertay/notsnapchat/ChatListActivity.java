@@ -1,8 +1,11 @@
 package uk.ac.abertay.notsnapchat;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -15,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 public class ChatListActivity extends AppCompatActivity {
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +26,17 @@ public class ChatListActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
+
+        Button btnClose = findViewById(R.id.btnClose);
+        btnClose.setOnTouchListener((v, event) -> {
+            if (event.getAction() != MotionEvent.ACTION_DOWN)
+                return false;
+
+            Intent intentMain = new Intent(this, MainActivity.class);
+            startActivity(intentMain);
+            finish();
+            return false;
+        });
 
         LinearLayout x = findViewById(R.id.lloChatsContainer);
 
