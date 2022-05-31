@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageCapture imageCapture;
 
+    private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,17 +53,15 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
 
+        unpackIncomingData();
         setOnClickListeners();
 
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
 
-        previewView = findViewById(R.id.cameraPreview);
-
         if (!allPermissionsGranted()) {
             requestAllPermissions();
         }
-
 
         cameraProviderListenableFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderListenableFuture.addListener(() -> {
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnCapture = findViewById(R.id.btnCapture);
         Button btnFlipCamera = findViewById(R.id.btnFlipCam);
         Button btnOpenProfile = findViewById(R.id.btnOpenProfile);
+        previewView = findViewById(R.id.cameraPreview);
 
         btnOpenProfile.setOnTouchListener((v, event) -> {
             if (event.getAction() != MotionEvent.ACTION_DOWN)
@@ -135,6 +136,16 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
+    private void unpackIncomingData() {
+        Intent incoming = getIntent();
+        Bundle userAsBundle =  incoming.getBundleExtra("user");
+        try {
+            user = User.parse_bundle(userAsBundle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void capturePhoto() {
         // app storage path
         File storageDir = this.getFilesDir();
@@ -148,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                        Intent intentIVA = new Intent();
+                        intentIVA.putExtra("user",User.to_bundle(user));
                         startActivity(new Intent(MainActivity.this, ImageViewerActivity.class));
                         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.none);
                         finish();

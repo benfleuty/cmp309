@@ -81,11 +81,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isPasswordValid() {
         String strPassword = getPassword();
-        boolean result = TextUtils.isEmpty(strPassword);
-        if (result)
+        boolean isEmpty = TextUtils.isEmpty(strPassword);
+        if (isEmpty)
             errors.add(getResources().getString(R.string.invalid_password));
 
-        return result;
+        return !isEmpty;
     }
 
     private String getEmailDebug() {
@@ -128,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login() {
         boolean success = isLoginInformationValid();
+        success = true;
         if (checkLoginFailure(success)) return;
 
         RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
@@ -188,7 +189,7 @@ public class LoginActivity extends AppCompatActivity {
                 bundleUserData.putString("username", user.getString("username"));
 
                 Intent intentMain = new Intent(this, MainActivity.class);
-                intentMain.putExtra("data", bundleUserData);
+                intentMain.putExtra("user", bundleUserData);
                 startActivity(intentMain);
 
                 finish();
