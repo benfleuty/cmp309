@@ -152,7 +152,6 @@ public class LoginActivity extends AppCompatActivity {
                 switch (status) {
                     case 200:
                         // success
-                        showToast("success");
                         break;
                     case 400:
                         // error with the inputs
@@ -183,12 +182,21 @@ public class LoginActivity extends AppCompatActivity {
                         return;
                 }
 
-                // get user id
+                // get user from data in from API
                 responseData = responseData.getJSONObject("data");
+                JSONObject user = responseData.getJSONObject("user");
 
-                // todo save user locally
+                // send user data to next activity
+                Bundle bundleUserData  = new Bundle();
 
-                startActivity(new Intent(this, MainActivity.class));
+                bundleUserData.putInt("id",user.getInt("id"));
+                bundleUserData.putString("email",user.getString("email"));
+                bundleUserData.putString("username",user.getString("username"));
+
+                Intent intentMain = new Intent(this,MainActivity.class);
+                intentMain.putExtra("data",bundleUserData);
+                startActivity(intentMain);
+
                 finish();
 
             } catch (JSONException e) {

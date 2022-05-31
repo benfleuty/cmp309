@@ -110,7 +110,57 @@ if(!$passwordsMatch){
 
 $output['status'] = 200;
 $output['response']['status'] = 200;
-$output['response']['data']['id'] = $row['id'];
+
+// get user information by id
+
+$sql = "SELECT id, email, username FROM notsnapchat_users WHERE id = ?";
+$query = new Query($sql);
+
+if (!$query->isPrepared()) {
+  // todo handle failure
+  die(strval(__LINE__));
+}
+
+$paramsTypes = "i";
+
+$query->bindParameters($paramsTypes, $row["id"]);
+
+$query->execute();
+
+if(!$query->successfulExecution()){
+  // todo handle error
+  die(strval(__LINE__));
+}
+
+$result = $query->getResult();
+
+switch ($result->num_rows){
+  case 0:
+    // email/password combo not found
+    $output['status'] = 200;
+    $output['response']['status'] = 404;
+    $output = json_encode($output);
+    exit($output);
+  case 1:
+    // a user has been found
+    $row = $result->fetch_assoc();
+    break;
+  default:
+    // todo error
+    die(strval(__LINE__));
+}
+
+// row should be an array otherwise error
+if(gettype($row) != "array"){
+  // todo handle error
+  die(strval(__LINE__));
+}
+
+$user['id'] = $row['id'];
+$user['email'] = $row['email'];
+$user['username'] = $row['username'];
+
+$output['response']['data']['user'] = $user;
 
 $output = json_encode($output);
 exit($output);
