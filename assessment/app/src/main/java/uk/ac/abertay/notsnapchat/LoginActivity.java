@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     final String POST_PASSWORD = "password";
     private final ArrayList<String> errors = new ArrayList<>();
     Toast currentToast;
+    Toast errorToast;
 
     private void showToast(String text) {
         currentToast.cancel();
@@ -54,13 +55,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isLoginInformationValid() {
+        errors.clear();
+
+        if (errorToast != null)
+            errorToast.cancel();
+
         boolean isValid;
 
         // check email validity
         isValid = isEmailValid();
 
         // check password validity
-        isValid &= isPasswordValid();
+        isValid = isPasswordValid() && isValid;
 
         return isValid;
     }
@@ -76,9 +82,10 @@ public class LoginActivity extends AppCompatActivity {
     private boolean isPasswordValid() {
         String strPassword = getPassword();
         boolean result = TextUtils.isEmpty(strPassword);
-        if (result) return true;
-        errors.add(getResources().getString(R.string.invalid_password));
-        return false;
+        if (result)
+            errors.add(getResources().getString(R.string.invalid_password));
+
+        return result;
     }
 
     private String getEmailDebug() {
@@ -109,9 +116,10 @@ public class LoginActivity extends AppCompatActivity {
         if (!success) {
             StringBuilder outputBuilder = new StringBuilder();
             for (String error : errors) {
-                outputBuilder.append(error).append(" ");
+                outputBuilder.append(error).append("\n");
             }
-            showToast(outputBuilder.toString().trim());
+            errorToast = Toast.makeText(this, outputBuilder.toString().trim(), Toast.LENGTH_SHORT);
+            errorToast.show();
             return true;
         }
 
