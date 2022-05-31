@@ -76,28 +76,23 @@ public class ImageViewerActivity extends Activity {
         getLocation();
 
         File filepath = getFilesDir();
-        Uri uri = Uri.parse(filepath.toString() + "/image.jpg");
-        this.uri = uri;
-        imgTaken.setImageURI(uri);
-    }
 
-    private void makeTheWarningsGoAway(Object ignored) {
-        try {
-            ignored.wait(0,0);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        uri =  Uri.parse(filepath.toString() + "/image.jpg");
+        imgTaken.setImageURI(uri);
     }
 
     private void saveImage() {
         requestSavePermissions();
+
+        File f = new File(String.valueOf(uri));
+        Log.e("", String.valueOf(f.exists()));
 
         Bitmap localImage = readLocalImage();
 
         File externalAppDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/NotSnapChat");
 
         if (!externalAppDir.exists())
-            makeTheWarningsGoAway(externalAppDir.mkdir());
+            externalAppDir.mkdir();
 
         Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
         int quality = 100;

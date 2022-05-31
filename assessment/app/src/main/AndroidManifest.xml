@@ -43,5 +43,8 @@
         <activity
             android:name=".ChatListActivity"
             android:exported="true" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="true" />
     </application>
 </manifest>

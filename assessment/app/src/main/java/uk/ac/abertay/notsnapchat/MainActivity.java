@@ -59,6 +59,17 @@ public class MainActivity extends AppCompatActivity {
         Button btnOpenChat = findViewById(R.id.btnOpenChat);
         Button btnCapture = findViewById(R.id.btnCapture);
         Button btnFlipCamera = findViewById(R.id.btnFlipCam);
+        Button btnOpenProfile = findViewById(R.id.btnOpenProfile);
+
+        btnOpenProfile.setOnTouchListener((v, event) -> {
+            if (event.getAction() != MotionEvent.ACTION_DOWN)
+                return false;
+
+            Intent intentProfile = new Intent(this,ProfileActivity.class);
+            startActivity(intentProfile);
+            finish();
+            return false;
+        });
 
         btnOpenChat.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)

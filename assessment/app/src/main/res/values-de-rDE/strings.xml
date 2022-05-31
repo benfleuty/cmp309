@@ -14,4 +14,7 @@
     <string name="flip_cam">Kamera wenden</string>
     <string name="invalid_email">Ungueltige E-Mail-Adresse</string>
     <string name="invalid_password">Ungueltige Passwort</string>
+    <string name="your_profile">Dein Profil</string>
+    <string name="username">Benutzername:</string>
+    <string name="confirm_password">Passwort bestaetigen</string>
 </resources>
