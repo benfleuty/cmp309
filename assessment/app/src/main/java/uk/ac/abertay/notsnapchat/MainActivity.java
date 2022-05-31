@@ -74,6 +74,16 @@ public class MainActivity extends AppCompatActivity {
         }, getExecutor());
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        try {
+            user.get_id(); // result ignored
+        } catch (NullPointerException e) {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private void setOnClickListeners() {
         Button btnOpenChat = findViewById(R.id.btnOpenChat);
@@ -86,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
             if (event.getAction() != MotionEvent.ACTION_DOWN)
                 return false;
 
-            Intent intentProfile = new Intent(MainActivity.this,ProfileActivity.class);
-            intentProfile.putExtra("user",User.to_bundle(user));
+            Intent intentProfile = new Intent(MainActivity.this, ProfileActivity.class);
+            intentProfile.putExtra("user", User.to_bundle(user));
             startActivity(intentProfile);
             finish();
             return false;
@@ -139,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void unpackIncomingData() {
         Intent incoming = getIntent();
-        Bundle userAsBundle =  incoming.getBundleExtra("user");
+        Bundle userAsBundle = incoming.getBundleExtra("user");
         try {
             user = User.parse_bundle(userAsBundle);
         } catch (Exception e) {

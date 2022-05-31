@@ -33,6 +33,8 @@ public class ImageViewerActivity extends Activity {
     private Uri uri;
     private Button btnSavePhoto;
 
+    private User user;
+
     public static String getImageName(String path) {
         if (path.endsWith("/")) path = path.substring(0, path.length() - 1);
 
@@ -41,6 +43,16 @@ public class ImageViewerActivity extends Activity {
         if (pos == -1) return path;
 
         return path.substring(pos + 1);
+    }
+
+    private void unpackIncomingData() {
+        Intent incoming = getIntent();
+        Bundle userAsBundle = incoming.getBundleExtra("user");
+        try {
+            user = User.parse_bundle(userAsBundle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -58,7 +70,9 @@ public class ImageViewerActivity extends Activity {
             if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
                 return false;
 
-            startActivity(new Intent(this, MainActivity.class));
+            Intent intentMain = new Intent(this, MainActivity.class);
+            intentMain.putExtra("user", User.to_bundle(user));
+            startActivity(intentMain);
             overridePendingTransition(R.anim.none, R.anim.slide_out_to_bottom);
             finish();
             return false;
@@ -77,8 +91,19 @@ public class ImageViewerActivity extends Activity {
 
         File filepath = getFilesDir();
 
-        uri =  Uri.parse(filepath.toString() + "/image.jpg");
+        uri = Uri.parse(filepath.toString() + "/image.jpg");
         imgTaken.setImageURI(uri);
+        unpackIncomingData();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        try {
+            user.get_id(); // result ignored
+        } catch (NullPointerException e) {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
     }
 
     private void saveImage() {
