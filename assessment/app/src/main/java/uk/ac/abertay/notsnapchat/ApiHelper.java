@@ -13,6 +13,7 @@ import java.util.Map;
 public class ApiHelper {
 
     public static final String DATA_KEY_EMAIL = "email";
+    public static final String DATA_KEY_USERNAME = "username";
     public static final String DATA_KEY_PASSWORD = "password";
 
     private final RequestQueue requestQueue;
@@ -22,6 +23,14 @@ public class ApiHelper {
     private final String url;
     private final Map<String, String> data;
 
+    /**
+     * @param context - this
+     * @param requestType - Request.Method.GET/POST/etc.
+     * @param url - Absolute URL of API endpoint
+     * @param data - Data to send as a Map
+     * @param successCallback - Function to call on success
+     * @param errorCallback - Function to call on failure
+     */
     public ApiHelper(Context context, int requestType, String url, Map<String, String> data, Response.Listener<String> successCallback, Response.ErrorListener errorCallback) {
         this.requestQueue = Volley.newRequestQueue(context);
         this.requestType = requestType;
@@ -31,7 +40,7 @@ public class ApiHelper {
         this.onErrorCallback = errorCallback;
     }
 
-    public void execute() {
+    public void executeAsync() {
 
         StringRequest stringRequest = new StringRequest(requestType, url, onSuccessCallback, onErrorCallback) {
             @Override

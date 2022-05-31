@@ -222,7 +222,7 @@ public class LoginActivity extends AppCompatActivity {
                 onLoginPOSTError
         );
 
-        postTryLogin.execute();
+        postTryLogin.executeAsync();
     }
 
 }

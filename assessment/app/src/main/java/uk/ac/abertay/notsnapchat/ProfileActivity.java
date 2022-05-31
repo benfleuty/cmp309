@@ -6,9 +6,16 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -76,6 +83,38 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void saveUserData() {
+        String newEmail = txtEmail.getText().toString();
+        String newUsername = txtUsername.getText().toString();
 
+        Map<String, String> data = new HashMap<>();
+
+        if (!user.get_email().equals(newEmail))
+            data.put(ApiHelper.DATA_KEY_EMAIL, newEmail);
+
+        if (!user.get_username().equals(newUsername))
+            data.put(ApiHelper.DATA_KEY_USERNAME, newUsername);
+
+        if (data.size() < 1)
+            // no change
+            return;
+
+        Response.Listener<String> onSuccess = response -> {
+            Toast.makeText(this,"success",Toast.LENGTH_SHORT).show();
+        };
+
+        Response.ErrorListener onError = error -> {
+            Toast.makeText(this,"fail",Toast.LENGTH_SHORT).show();
+        };
+
+        ApiHelper userUpdater = new ApiHelper(
+                this,
+                Request.Method.PATCH,
+                ExternalResources.userURL,
+                data,
+                onSuccess,
+                onError
+        );
+
+        userUpdater.executeAsync();
     }
 }

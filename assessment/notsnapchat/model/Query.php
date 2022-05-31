@@ -1,7 +1,7 @@
 <?php
 /* author Ben Fleuty */
 
-require_once "../tools/db.php";
+require_once "/home/1900040/public_html/notsnapchat/model/db.php";
 
 class Query
 {
