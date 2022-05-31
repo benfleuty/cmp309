@@ -17,7 +17,7 @@
         android:layout_marginStart="10dp"
         android:alpha="0.8"
         android:padding="0dp"
-        android:text="X"
+        android:text="Close"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
