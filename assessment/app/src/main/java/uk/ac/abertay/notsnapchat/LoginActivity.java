@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -21,6 +20,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,13 +28,12 @@ public class LoginActivity extends AppCompatActivity {
 
     final String POST_EMAIL = "email";
     final String POST_PASSWORD = "password";
-    final String POST_USERNAME = "username";
-
+    private final ArrayList<String> errors = new ArrayList<>();
     Toast currentToast;
 
-    private void showToast(String text){
+    private void showToast(String text) {
         currentToast.cancel();
-        currentToast = Toast.makeText(this,text,Toast.LENGTH_LONG);
+        currentToast = Toast.makeText(this, text, Toast.LENGTH_LONG);
         currentToast.show();
     }
 
@@ -50,19 +49,15 @@ public class LoginActivity extends AppCompatActivity {
         Button btnSignIn = (Button) findViewById(R.id.btnSignUp);
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
 
-        btnSignIn.setOnClickListener(view -> {
-            signUp();
-        });
-        btnLogin.setOnClickListener(view -> {
-            login();
-        });
+        btnSignIn.setOnClickListener(view -> signUp());
+        btnLogin.setOnClickListener(view -> login());
     }
 
     private boolean isLoginInformationValid() {
-        boolean isValid = true;
+        boolean isValid;
 
         // check email validity
-        isValid &= isEmailValid();
+        isValid = isEmailValid();
 
         // check password validity
         isValid &= isPasswordValid();
@@ -72,12 +67,18 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isEmailValid() {
         String strEmail = getEmail();
-        return (!TextUtils.isEmpty(strEmail) && Patterns.EMAIL_ADDRESS.matcher(strEmail).matches());
+        boolean result = !TextUtils.isEmpty(strEmail) && Patterns.EMAIL_ADDRESS.matcher(strEmail).matches();
+        if (result) return true;
+        errors.add("Invalid email!");
+        return false;
     }
 
     private boolean isPasswordValid() {
         String strPassword = getPassword();
-        return !TextUtils.isEmpty(strPassword);
+        boolean result = TextUtils.isEmpty(strPassword);
+        if (result) return true;
+        errors.add("Invalid password!");
+        return false;
     }
 
     private String getEmailDebug() {
@@ -97,44 +98,29 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signUp() {
-        boolean success = true;
-        String errors = "";
-        if (!isEmailValid()) {
-            success = false;
-            errors += " Invalid email!";
-        }
-        if (!isPasswordValid()) {
-            success = false;
-            errors += " Invalid password!";
-
-        }
-
-        if (!success) {
-            showToast(errors);
-            return;
-        }
+        boolean success = isLoginInformationValid();
+        if (checkLoginFailure(success)) return;
 
         showToast("Registering with " + getEmail() + "/" + getPassword());
         // todo try sign up
     }
 
-    private void login() {
-        boolean success = true;
-        String errors = "";
-        if (!isEmailValid()) {
-            success = false;
-            errors += " Invalid email!";
-        }
-        if (!isPasswordValid()) {
-            success = false;
-            errors += " Invalid password!";
-
-        }
-        success = true;
+    private boolean checkLoginFailure(boolean success) {
         if (!success) {
-            showToast(errors);
-            return;
+            StringBuilder outputBuilder = new StringBuilder();
+            for (String error : errors) {
+                outputBuilder.append(error).append(" ");
+            }
+            showToast(outputBuilder.toString().trim());
+            return true;
         }
+
+        return false;
+    }
+
+    private void login() {
+        boolean success = isLoginInformationValid();
+        if (checkLoginFailure(success)) return;
 
         RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
 
@@ -187,14 +173,14 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject user = responseData.getJSONObject("user");
 
                 // send user data to next activity
-                Bundle bundleUserData  = new Bundle();
+                Bundle bundleUserData = new Bundle();
 
-                bundleUserData.putInt("id",user.getInt("id"));
-                bundleUserData.putString("email",user.getString("email"));
-                bundleUserData.putString("username",user.getString("username"));
+                bundleUserData.putInt("id", user.getInt("id"));
+                bundleUserData.putString("email", user.getString("email"));
+                bundleUserData.putString("username", user.getString("username"));
 
-                Intent intentMain = new Intent(this,MainActivity.class);
-                intentMain.putExtra("data",bundleUserData);
+                Intent intentMain = new Intent(this, MainActivity.class);
+                intentMain.putExtra("data", bundleUserData);
                 startActivity(intentMain);
 
                 finish();
@@ -204,13 +190,11 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
-        Response.ErrorListener postError = error -> {
-            showToast(error.toString());
-        };
+        Response.ErrorListener postError = error -> showToast(error.toString());
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, ExternalResources.loginUser, postSuccess, postError) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put(POST_EMAIL, getEmailDebug());
                 params.put(POST_PASSWORD, getPasswordDebug());

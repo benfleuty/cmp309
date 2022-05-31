@@ -1,5 +1,6 @@
 package uk.ac.abertay.notsnapchat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -15,6 +16,7 @@ import androidx.constraintlayout.widget.Constraints;
 
 import com.google.android.material.divider.MaterialDivider;
 
+@SuppressLint("ViewConstructor")
 public class ConversationBadge extends ConstraintLayout implements View.OnTouchListener {
     Context context;
 

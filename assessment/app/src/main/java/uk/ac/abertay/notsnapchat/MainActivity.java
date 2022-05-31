@@ -36,13 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private int cameraFacing;
     private ProcessCameraProvider cameraProvider;
 
-    private Button btnOpenChat;
-    private Button btnCapture;
-    private Button btnOpenSettings;
-    private Button btnFlipCamera;
-
-    private CameraSelector cameraSelector;
-    private Preview preview;
     private ImageCapture imageCapture;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -63,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
 
         previewView = findViewById(R.id.cameraPreview);
-        btnOpenChat = findViewById(R.id.btnOpenChat);
-        btnCapture = findViewById(R.id.btnCapture);
-        btnFlipCamera = findViewById(R.id.btnFlipCam);
+        Button btnOpenChat = findViewById(R.id.btnOpenChat);
+        Button btnCapture = findViewById(R.id.btnCapture);
+        Button btnFlipCamera = findViewById(R.id.btnFlipCam);
 
         btnOpenChat.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
@@ -167,14 +160,14 @@ public class MainActivity extends AppCompatActivity {
     private void setCameraFacing(int direction) {
         cameraProvider.unbindAll();
         // camera selection use case
-        cameraSelector = new CameraSelector.Builder()
+        CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(direction)
                 .build();
 
         cameraFacing = direction;
 
         // preview use case
-        preview = new Preview.Builder().build();
+        Preview preview = new Preview.Builder().build();
 
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 

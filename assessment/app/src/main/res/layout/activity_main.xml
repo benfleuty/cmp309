@@ -17,11 +17,13 @@
 
     </androidx.camera.view.PreviewView>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
+        app:layout_constraintBaseline_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="20dp"
         app:layout_constraintBottom_toBottomOf="@id/cameraPreview"
         app:layout_constraintLeft_toLeftOf="@id/cameraPreview">
 
@@ -29,11 +31,10 @@
             android:id="@+id/btnOpenChat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
             android:alpha="0.65"
-            android:gravity="center_vertical"
-            android:text="chat"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/chat"
             android:textAlignment="center"
             android:textColor="@color/white" />
 
@@ -41,10 +42,11 @@
             android:id="@+id/btnCapture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:alpha="0.65"
-            android:gravity="center_vertical"
-            android:text="Capture"
+            android:text="@string/capture"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:textAlignment="center"
             android:textColor="@color/white" />
 
@@ -52,14 +54,13 @@
             android:id="@+id/btnFlipCam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:alpha="0.65"
-            android:gravity="center_vertical"
-            android:text="Flip cam"
+            android:text="@string/flip_cam"
             android:textAlignment="center"
             android:textColor="@color/white" />
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

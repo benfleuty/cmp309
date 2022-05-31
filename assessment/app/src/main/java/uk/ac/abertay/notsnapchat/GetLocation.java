@@ -64,37 +64,11 @@ public class GetLocation implements Runnable {
             try {
                 String address = null;
 
-                if (addresses.get(0).getLocality() == null)
-                    address = addresses.get(0).getAddressLine(0);
-                else
-                    address = addresses.get(0).getLocality();
-
-
-                if (false) {
-
-                    if (addresses == null) {
-                        Log.i("city", "addresses was null");
-                    }
-
-                    if (addresses.get(0) == null) {
-                        Log.i("city", "addresses.get(0) was null");
-                    } else {
-                        Log.i("city", addresses.get(0).toString());
-                    }
-
-                    if (addresses.get(0).getLocality() == null) {
-                        Log.i("city", "addresses.get(0).getLocality() was null");
-                    } else {
-                        Log.i("city", addresses.get(0).getLocality());
-                        address = addresses.get(0).getLocality();
-                    }
-
-                    if (address == null && addresses.get(0).getAddressLine(0) == null) {
-                        Log.i("city", "addresses.get(0).getAddressLine() was null");
-                    } else if (address == null) {
-                        Log.i("city", addresses.get(0).getAddressLine(0));
+                if (addresses != null) {
+                    if (addresses.get(0).getLocality() == null)
                         address = addresses.get(0).getAddressLine(0);
-                    }
+                    else
+                        address = addresses.get(0).getLocality();
                 }
 
                 if (address != null) {

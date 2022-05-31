@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,13 +31,7 @@ import java.util.Objects;
 public class ImageViewerActivity extends Activity {
     FusedLocationProviderClient fusedLocationProviderClient;
     private Uri uri;
-    private ImageView imgTaken;
-    private Button btnCancel;
     private Button btnSavePhoto;
-    private String cityName;
-    private Button btnLocation;
-    private boolean locationShown = false;
-    private Button btnAddText;
 
     public static String getImageName(String path) {
         if (path.endsWith("/")) path = path.substring(0, path.length() - 1);
@@ -50,13 +43,6 @@ public class ImageViewerActivity extends Activity {
         return path.substring(pos + 1);
     }
 
-    public static int convertToPixels(Context context, int nDP) {
-        final float conversionScale = context.getResources().getDisplayMetrics().density;
-
-        return (int) ((nDP * conversionScale) + 0.5f);
-
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,8 +50,8 @@ public class ImageViewerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_viewer);
 
-        imgTaken = findViewById(R.id.imgTaken);
-        btnCancel = findViewById(R.id.btnCancel);
+        ImageView imgTaken = findViewById(R.id.imgTaken);
+        Button btnCancel = findViewById(R.id.btnCancel);
         btnSavePhoto = findViewById(R.id.btnSavePhoto);
 
         btnCancel.setOnTouchListener((view, motionEvent) -> {
@@ -75,19 +61,6 @@ public class ImageViewerActivity extends Activity {
             startActivity(new Intent(this, MainActivity.class));
             overridePendingTransition(R.anim.none, R.anim.slide_out_to_bottom);
             finish();
-            return false;
-        });
-
-        btnLocation.setOnTouchListener((view, motionEvent) -> {
-            if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
-                return false;
-
-            if (locationShown) {
-                Toast.makeText(this, "removed " + cityName, Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "added" + cityName, Toast.LENGTH_LONG).show();
-            }
-            locationShown = !locationShown;
             return false;
         });
 
@@ -108,6 +81,14 @@ public class ImageViewerActivity extends Activity {
         imgTaken.setImageURI(uri);
     }
 
+    private void makeTheWarningsGoAway(Object ignored) {
+        try {
+            ignored.wait(0,0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void saveImage() {
         requestSavePermissions();
 
@@ -115,9 +96,8 @@ public class ImageViewerActivity extends Activity {
 
         File externalAppDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/NotSnapChat");
 
-        if (!externalAppDir.exists()) {
-            externalAppDir.mkdir();
-        }
+        if (!externalAppDir.exists())
+            makeTheWarningsGoAway(externalAppDir.mkdir());
 
         Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
         int quality = 100;
@@ -157,10 +137,6 @@ public class ImageViewerActivity extends Activity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    public void SetCityName(String name) {
-        cityName = name;
     }
 
     private Bitmap readLocalImage() {
