@@ -85,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnFlipCamera.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
+                return false;
+
             swapCameras();
             return false;
         });
