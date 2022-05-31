@@ -86,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
             if (event.getAction() != MotionEvent.ACTION_DOWN)
                 return false;
 
-            Intent intentProfile = new Intent(this, ProfileActivity.class);
+            Intent intentProfile = new Intent(MainActivity.this,ProfileActivity.class);
+            intentProfile.putExtra("user",User.to_bundle(user));
             startActivity(intentProfile);
             finish();
             return false;
@@ -159,8 +160,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        Intent intentIVA = new Intent();
-                        intentIVA.putExtra("user",User.to_bundle(user));
                         startActivity(new Intent(MainActivity.this, ImageViewerActivity.class));
                         overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.none);
                         finish();
