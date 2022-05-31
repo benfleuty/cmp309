@@ -1,8 +1,10 @@
 package uk.ac.abertay.notsnapchat;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,13 +12,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,11 +29,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
 
-public class ImageViewerActivity extends AppCompatActivity {
+public class ImageViewerActivity extends Activity {
+    FusedLocationProviderClient fusedLocationProviderClient;
     private Uri uri;
     private ImageView imgTaken;
     private Button btnCancel;
     private Button btnSavePhoto;
+    private String cityName;
+    private Button btnLocation;
+    private boolean locationShown = false;
+    private Button btnAddText;
 
     public static String getImageName(String path) {
         if (path.endsWith("/")) path = path.substring(0, path.length() - 1);
@@ -40,18 +50,24 @@ public class ImageViewerActivity extends AppCompatActivity {
         return path.substring(pos + 1);
     }
 
+    public static int convertToPixels(Context context, int nDP) {
+        final float conversionScale = context.getResources().getDisplayMetrics().density;
+
+        return (int) ((nDP * conversionScale) + 0.5f);
+
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.e("", "start");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_viewer);
-
-        if (getSupportActionBar() != null)
-            this.getSupportActionBar().hide();
 
         imgTaken = findViewById(R.id.imgTaken);
         btnCancel = findViewById(R.id.btnCancel);
         btnSavePhoto = findViewById(R.id.btnSavePhoto);
+        btnLocation = findViewById(R.id.btnLocation);
 
         btnCancel.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
@@ -63,6 +79,19 @@ public class ImageViewerActivity extends AppCompatActivity {
             return false;
         });
 
+        btnLocation.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
+                return false;
+
+            if (locationShown) {
+                Toast.makeText(this, "removed " + cityName, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "added" + cityName, Toast.LENGTH_LONG).show();
+            }
+            locationShown = !locationShown;
+            return false;
+        });
+
         btnSavePhoto.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
                 return false;
@@ -71,7 +100,10 @@ public class ImageViewerActivity extends AppCompatActivity {
             return false;
         });
 
-        File filepath = this.getFilesDir();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        getLocation();
+
+        File filepath = getFilesDir();
         Uri uri = Uri.parse(filepath.toString() + "/image.jpg");
         this.uri = uri;
         imgTaken.setImageURI(uri);
@@ -84,8 +116,8 @@ public class ImageViewerActivity extends AppCompatActivity {
 
         File externalAppDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/NotSnapChat");
 
-        if(!externalAppDir.exists()){
-             externalAppDir.mkdir();
+        if (!externalAppDir.exists()) {
+            externalAppDir.mkdir();
         }
 
         Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
@@ -93,7 +125,7 @@ public class ImageViewerActivity extends AppCompatActivity {
         String mimeType = "image/jpg";
         ContentValues contentValues = new ContentValues();
         String image = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/NotSnapChat/image.jpg";
-        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, getImageName(image.toString()));
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, getImageName(image));
         contentValues.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
         contentValues.put(MediaStore.MediaColumns.DATA, uri.toString());
 
@@ -115,6 +147,21 @@ public class ImageViewerActivity extends AppCompatActivity {
 
         btnSavePhoto.setEnabled(false);
         Toast.makeText(this, "Image successfully saved", Toast.LENGTH_SHORT).show();
+    }
+
+    private void getLocation() {
+        GetLocation getLocation = new GetLocation(this);
+        Thread getLocationThread = new Thread(getLocation);
+        getLocationThread.start();
+        try {
+            getLocationThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void SetCityName(String name) {
+        cityName = name;
     }
 
     private Bitmap readLocalImage() {

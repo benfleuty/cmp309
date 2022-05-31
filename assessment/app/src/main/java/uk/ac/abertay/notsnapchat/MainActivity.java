@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
 
-        if(getSupportActionBar()!=null)
+        if (getSupportActionBar() != null)
             getSupportActionBar().hide();
 
         previewView = findViewById(R.id.cameraPreview);
@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
             if (motionEvent.getAction() != MotionEvent.ACTION_DOWN)
                 return false;
 
-            startActivity(new Intent(this,ChatListActivity.class));
-            overridePendingTransition(R.anim.slide_in_from_left,R.anim.slide_out_to_right);
+            startActivity(new Intent(this, ChatListActivity.class));
+            overridePendingTransition(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
             return false;
         });
 
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                         startActivity(new Intent(MainActivity.this, ImageViewerActivity.class));
-                        overridePendingTransition(R.anim.slide_in_from_bottom,R.anim.none);
+                        overridePendingTransition(R.anim.slide_in_from_bottom, R.anim.none);
                         finish();
                     }
 
